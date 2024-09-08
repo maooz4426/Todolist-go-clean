@@ -1,0 +1,19 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_gorm
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      TZ: Asia/Tokyo
+      LANG: ja_JP.UTF-8
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-volume:/var/lib/mysql
+
+volumes:
+  db-volume:

@@ -8,5 +8,6 @@ import (
 type Todo struct {
 	gorm.Model
 	Task     string
+	Done     bool
 	Deadline time.Time
 }
