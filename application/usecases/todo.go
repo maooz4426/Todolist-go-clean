@@ -1,20 +1,20 @@
 package usecases
 
 import (
-	"context"
+	"github.com/labstack/echo/v4"
 	"github.com/maooz4426/Todolist/domain"
 	"github.com/maooz4426/Todolist/domain/repository"
 )
 
 type TodoUseCase struct {
-	repo repository.TodoRepository
+	repo repository.TodoRepositoryer
 }
 
-func NewTodoUseCase(repo repository.TodoRepository) *TodoUseCase {
+func NewTodoUseCase(repo repository.TodoRepositoryer) *TodoUseCase {
 	return &TodoUseCase{repo: repo}
 }
 
-func (uc *TodoUseCase) Add(ctx context.Context, task *domain.Todo) error {
+func (uc *TodoUseCase) Create(ctx echo.Context, task *domain.Todo) error {
 
 	uc.repo.InsertTodo(ctx, task)
 	return nil
