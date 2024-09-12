@@ -2,10 +2,10 @@ package main
 
 import (
 	"github.com/maooz4426/Todolist/application/usecases"
+	"github.com/maooz4426/Todolist/infrastructure"
 	"github.com/maooz4426/Todolist/infrastructure/database"
 	"github.com/maooz4426/Todolist/infrastructure/repository"
-	"github.com/maooz4426/Todolist/interfaces"
-	"github.com/maooz4426/Todolist/interfaces/handlers"
+	"github.com/maooz4426/Todolist/interfaces/controllers"
 	"log"
 )
 
@@ -19,9 +19,9 @@ func main() {
 
 	usc := usecases.NewTodoUseCase(repo)
 
-	hnd := handlers.NewHandler(usc)
+	hnd := controllers.NewHandler(usc)
 
-	interfaces.NewRouter(hnd)
+	infrastructure.NewRouter(hnd)
 
 }
 
