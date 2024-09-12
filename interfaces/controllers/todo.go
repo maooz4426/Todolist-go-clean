@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/maooz4426/Todolist/domain"
+	"github.com/maooz4426/Todolist/domain/entity"
 	"github.com/maooz4426/Todolist/domain/usecases"
 	"net/http"
 	"time"
@@ -28,7 +28,7 @@ func (r TodoHandler) CreateHandler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	var task domain.Todo
+	var task entity.Todo
 	task.Task = req.Task
 	task.Deadline = req.Deadline
 	task.Done = false

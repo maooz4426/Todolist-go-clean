@@ -2,7 +2,7 @@ package repository
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/maooz4426/Todolist/domain"
+	"github.com/maooz4426/Todolist/domain/entity"
 	"gorm.io/gorm"
 )
 
@@ -15,8 +15,8 @@ func NewTodoRepository(db *gorm.DB) *TodoRepository {
 	return &TodoRepository{db}
 }
 
-func (m *TodoRepository) InsertTodo(ctx echo.Context, task *domain.Todo) (*domain.Todo, error) {
-	todo := domain.Todo{
+func (m *TodoRepository) InsertTodo(ctx echo.Context, task *entity.Todo) (*entity.Todo, error) {
+	todo := entity.Todo{
 		Task:     task.Task,
 		Done:     false,
 		Deadline: task.Deadline,
@@ -25,7 +25,7 @@ func (m *TodoRepository) InsertTodo(ctx echo.Context, task *domain.Todo) (*domai
 	result := m.db.Create(&todo)
 
 	if result.Error != nil {
-		return &domain.Todo{}, result.Error
+		return &entity.Todo{}, result.Error
 	}
 
 	return &todo, nil
