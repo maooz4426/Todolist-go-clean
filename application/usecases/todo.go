@@ -3,7 +3,7 @@ package usecases
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/maooz4426/Todolist/domain/entity"
-	"github.com/maooz4426/Todolist/domain/repository"
+	"github.com/maooz4426/Todolist/interfaces/repository"
 )
 
 type TodoUseCase struct {
