@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type TodoHandler struct {
+type TodoController struct {
 	svc usecases.TodoUseCaser
 }
 
@@ -17,11 +17,11 @@ type CreateRequest struct {
 	Deadline time.Time `json:"deadline"`
 }
 
-func NewHandler(svc usecases.TodoUseCaser) *TodoHandler {
-	return &TodoHandler{svc}
+func NewController(svc usecases.TodoUseCaser) *TodoController {
+	return &TodoController{svc}
 }
 
-func (r TodoHandler) CreateHandler(c echo.Context) error {
+func (r TodoController) CreateController(c echo.Context) error {
 
 	var req CreateRequest
 	if err := c.Bind(&req); err != nil {

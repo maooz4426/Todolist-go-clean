@@ -19,7 +19,7 @@ func main() {
 
 	usc := usecases.NewTodoUseCase(repo)
 
-	hnd := controllers.NewHandler(usc)
+	hnd := controllers.NewController(usc)
 
 	infrastructure.NewRouter(hnd)
 
