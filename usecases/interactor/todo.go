@@ -1,9 +1,9 @@
-package usecases
+package interactor
 
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/maooz4426/Todolist/domain/entity"
-	"github.com/maooz4426/Todolist/interfaces/repository"
+	"github.com/maooz4426/Todolist/usecases/repository"
 )
 
 type TodoUseCase struct {

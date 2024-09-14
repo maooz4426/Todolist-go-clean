@@ -1,23 +1,22 @@
 package main
 
 import (
-	"github.com/maooz4426/Todolist/application/usecases"
 	"github.com/maooz4426/Todolist/infrastructure"
-	"github.com/maooz4426/Todolist/infrastructure/database"
-	"github.com/maooz4426/Todolist/infrastructure/repository"
 	"github.com/maooz4426/Todolist/interfaces/controllers"
+	"github.com/maooz4426/Todolist/interfaces/gateways/repository/mysql"
+	"github.com/maooz4426/Todolist/usecases/interactor"
 	"log"
 )
 
 func main() {
-	db, err := database.NewDB()
+	db, err := mysql.NewDB()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	repo := repository.NewTodoRepository(db)
+	repo := mysql.NewTodoRepository(db)
 
-	usc := usecases.NewTodoUseCase(repo)
+	usc := interactor.NewTodoUseCase(repo)
 
 	hnd := controllers.NewController(usc)
 

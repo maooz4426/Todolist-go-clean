@@ -1,4 +1,4 @@
-package repository
+package mysql
 
 import (
 	"github.com/labstack/echo/v4"
