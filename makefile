@@ -1,4 +1,4 @@
-app:
+up:
 	docker compose up
 
 build:

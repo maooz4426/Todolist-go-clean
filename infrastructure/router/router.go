@@ -1,6 +1,7 @@
-package infrastructure
+package router
 
 import (
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/maooz4426/Todolist/interfaces/controllers"
 )
@@ -8,5 +9,9 @@ import (
 func NewRouter(cnt *controllers.TodoController) {
 	e := echo.New()
 
-	e.GET("/create", cnt.CreateController)
+	fmt.Println("starting server")
+
+	e.POST("/create", cnt.CreateController)
+
+	e.Logger.Fatal(e.Start(":8080"))
 }

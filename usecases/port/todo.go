@@ -1,4 +1,4 @@
-package usecases
+package port
 
 import (
 	"github.com/labstack/echo/v4"

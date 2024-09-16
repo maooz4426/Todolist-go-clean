@@ -1,4 +1,4 @@
-package mysql
+package datasource
 
 import (
 	"github.com/labstack/echo/v4"
