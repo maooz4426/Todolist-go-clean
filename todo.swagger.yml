@@ -1,0 +1,34 @@
+openapi: 3.0.0
+info:
+    title: todo
+    description: todoAPI
+    version: 1.0.0
+
+paths:
+  /create:
+    post:
+     operationId: todo-create
+     description: "todoタスクを作成します"
+     requestBody:
+       content:
+         application/json:
+           schema:
+             type: object
+             properties:
+               task:
+                 type: string
+                 description: タスク
+                 example: "買い物に行く"
+               deadline:
+                type: string
+                description: 締切日を設定
+                example: "2024-10-12"
+             required:
+                 - task
+                 - deadline
+     responses:
+       "201":
+         description: success
+       "400":
+         description: Bad Request
+         
