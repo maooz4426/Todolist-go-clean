@@ -39,7 +39,7 @@ func (r TodoController) CreateController(c echo.Context) error {
 	}
 	task.Done = false
 
-	err = r.svc.Create(c, &task)
+	err = r.svc.Create(&task)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
