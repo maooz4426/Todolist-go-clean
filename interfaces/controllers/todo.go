@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
+	"github.com/maooz4426/Todolist/domain/dto"
 	"github.com/maooz4426/Todolist/domain/entity"
 	"github.com/maooz4426/Todolist/usecases/port"
 	"net/http"
@@ -13,10 +14,10 @@ type TodoController struct {
 	svc port.TodoUseCaser
 }
 
-type CreateRequest struct {
-	Task     string `json:"task"`
-	Deadline string `json:"deadline"`
-}
+//type CreateRequest struct {
+//	Task     string `json:"task"`
+//	Deadline string `json:"deadline"`
+//}
 
 func NewController(svc port.TodoUseCaser) *TodoController {
 	return &TodoController{svc}
@@ -24,7 +25,7 @@ func NewController(svc port.TodoUseCaser) *TodoController {
 
 func (r TodoController) CreateController(c echo.Context) error {
 
-	var req CreateRequest
+	var req dto.CreateRequest
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
@@ -39,10 +40,11 @@ func (r TodoController) CreateController(c echo.Context) error {
 	}
 	task.Done = false
 
-	err = r.svc.Create(&task)
+	var res *dto.CreateResponse
+	res, err = r.svc.Create(&task)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, task)
+	return c.JSON(http.StatusOK, res)
 }

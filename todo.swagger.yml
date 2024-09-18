@@ -46,7 +46,7 @@ paths:
                     required:
                       - id
                       - task
-                      - task
+                      - deadline
                       - done
         400:
           description: Bad Request
@@ -110,5 +110,33 @@ paths:
      responses:
        201:
          description: success
+         content:
+           application/json:
+             schema:
+               type: object
+               properties:
+                 id:
+                   type: integer
+                   description: タスクのID
+                   example: 1
+                 task:
+                   type: string
+                   description: タスクの内容
+                   example: "買い物に行く"
+                 deadline:
+                   type: string
+                   format: date
+                   description: 締切日
+                   example: "2024-10-12"
+                 done:
+                   type: boolean
+                   description: タスクの状態
+                   example: false
+
+               required:
+                     - id
+                     - task
+                     - deadline
+                     - done
        400:
          description: Bad Request

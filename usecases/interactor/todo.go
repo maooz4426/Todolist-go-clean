@@ -1,6 +1,7 @@
 package interactor
 
 import (
+	"github.com/maooz4426/Todolist/domain/dto"
 	"github.com/maooz4426/Todolist/domain/entity"
 	"github.com/maooz4426/Todolist/usecases/repository"
 )
@@ -13,8 +14,19 @@ func NewTodoUseCase(repo repository.TodoRepositoryer) *TodoUseCase {
 	return &TodoUseCase{repo: repo}
 }
 
-func (uc *TodoUseCase) Create(task *entity.Todo) error {
+func (uc *TodoUseCase) Create(task *entity.Todo) (*dto.CreateResponse, error) {
 
-	uc.repo.InsertTodo(task)
-	return nil
+	task, err := uc.repo.InsertTodo(task)
+	if err != nil {
+		return nil, err
+	}
+
+	res := &dto.CreateResponse{
+		ID:       task.ID,
+		Task:     task.Task,
+		Deadline: task.Deadline,
+		Done:     task.Done,
+	}
+	
+	return res, nil
 }
