@@ -5,6 +5,87 @@ info:
     version: 1.0.0
 
 paths:
+  /tasks:
+    get:
+      operationId: todolist-fetch
+      description: "todoタスクの一覧を取得します"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: 全タスクの総数
+                    example: 2
+                  tasks:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: タスクのID
+                          example: 1
+                        task:
+                          type: string
+                          description: タスクの内容
+                          example: "買い物に行く"
+                        deadline:
+                          type: string
+                          format: date
+                          description: 締切日
+                          example: "2024-10-12"
+                        done:
+                          type: boolean
+                          description: タスクの状態
+                          example: false
+                    required:
+                      - id
+                      - task
+                      - task
+                      - done
+        400:
+          description: Bad Request
+
+  /tasks/{taskId}:
+    get:
+      operationId: todo-detail
+      description: "todoタスクの詳細を表示します"
+      parameters:
+        - name: "taskId"
+          in: path
+          description: "詳細を取得したいtodoタスクのID"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+          example: 1
+      responses:
+        200:
+          description: "成功時のレスポンス"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task:
+                    type: string
+                    description: タスク
+                    example: "買い物に行く"
+                  deadline:
+                    type: string
+                    description: 締切日
+                    example: "2024-10-12"
+                required:
+                  - task
+                  - deadline
+        "400":
+          description: Bad Request
+
   /tasks/create:
     post:
      operationId: todo-create
@@ -17,7 +98,7 @@ paths:
              properties:
                task:
                  type: string
-                 description: タスク
+                 description: タスクを設定
                  example: "買い物に行く"
                deadline:
                 type: string
@@ -27,7 +108,7 @@ paths:
                  - task
                  - deadline
      responses:
-       "201":
+       201:
          description: success
-       "400":
+       400:
          description: Bad Request
