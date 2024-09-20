@@ -29,3 +29,14 @@ func (m *TodoRepository) InsertTodo(task *entity.Todo) (*entity.Todo, error) {
 
 	return &todo, nil
 }
+
+func (m *TodoRepository) FindTodo() ([]*entity.Todo, error) {
+	var todos []*entity.Todo
+
+	result := m.db.Find(&todos)
+	if result.Error != nil {
+		return []*entity.Todo{}, result.Error
+	}
+	
+	return todos, nil
+}

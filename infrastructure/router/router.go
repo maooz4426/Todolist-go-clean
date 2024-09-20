@@ -12,6 +12,7 @@ func NewRouter(cnt *controllers.TodoController) {
 	fmt.Println("starting server")
 
 	e.POST("/tasks/create", cnt.CreateController)
+	e.GET("/tasks", cnt.GetAllController)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
