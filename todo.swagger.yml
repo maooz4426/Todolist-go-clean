@@ -7,7 +7,7 @@ info:
 paths:
   /tasks:
     get:
-      operationId: todolist-fetch
+      operationId: todolist-findall
       description: "todoタスクの一覧を取得します"
       responses:
         200:

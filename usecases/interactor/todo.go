@@ -15,7 +15,7 @@ func NewTodoUseCase(repo repository.TodoRepositoryer) *TodoUseCase {
 
 func (uc *TodoUseCase) Create(task *entity.Todo) (*entity.Todo, error) {
 
-	task, err := uc.repo.InsertTodo(task)
+	task, err := uc.repo.Insert(task)
 	if err != nil {
 		return nil, err
 	}
@@ -39,10 +39,19 @@ func (uc *TodoUseCase) Create(task *entity.Todo) (*entity.Todo, error) {
 
 func (uc *TodoUseCase) FindAll() ([]*entity.Todo, error) {
 
-	todos, err := uc.repo.FindTodo()
+	todos, err := uc.repo.FindAll()
 	if err != nil {
 		return nil, err
 	}
 
 	return todos, nil
+}
+
+func (uc *TodoUseCase) FindById(id string) (*entity.Todo, error) {
+	task, err := uc.repo.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return task, nil
 }

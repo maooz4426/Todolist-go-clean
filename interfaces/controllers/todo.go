@@ -13,6 +13,12 @@ type TodoController struct {
 	usc port.TodoUseCaser
 }
 
+type Controller interface {
+	CreateController(c echo.Context) error
+	GetAllController(c echo.Context) error
+	GetDetailController(c echo.Context) error
+}
+
 func NewController(svc port.TodoUseCaser) *TodoController {
 	return &TodoController{svc}
 }
@@ -63,6 +69,23 @@ func (con TodoController) GetAllController(c echo.Context) error {
 			return c.JSON(http.StatusInternalServerError, err.Error())
 		}
 		res = append(res, *todoDto)
+	}
+
+	return c.JSON(http.StatusOK, res)
+}
+
+func (con TodoController) GetDetailController(c echo.Context) error {
+	id := c.Param("taskId")
+
+	task, err := con.usc.FindById(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	res, err := task.ConvertDTO()
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, res)
