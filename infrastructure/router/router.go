@@ -13,6 +13,7 @@ func NewRouter(cnt *controllers.TodoController) {
 
 	e.POST("/tasks/create", cnt.CreateController)
 	e.GET("/tasks", cnt.GetAllController)
+	e.GET("/tasks/:taskId", cnt.GetDetailController)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

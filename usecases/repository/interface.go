@@ -6,7 +6,9 @@ import (
 
 // usecase層で使うrepository層のメソッドを定義
 // これで依存先を抽象化
+// ダックタイピングしてる
 type TodoRepositoryer interface {
-	InsertTodo(task *entity.Todo) (*entity.Todo, error)
-	FindTodo() ([]*entity.Todo, error)
+	Insert(task *entity.Todo) (*entity.Todo, error)
+	FindAll() ([]*entity.Todo, error)
+	FindById(id string) (*entity.Todo, error)
 }
