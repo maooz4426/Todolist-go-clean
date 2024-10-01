@@ -8,7 +8,7 @@ paths:
   /tasks:
     get:
       operationId: todolist-findall
-      description: "todoタスクの一覧を取得します"
+      description: "todoタスクの一覧を取得"
       responses:
         200:
           description: "成功時のレスポンス"
