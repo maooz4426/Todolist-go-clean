@@ -55,3 +55,12 @@ func (uc *TodoUseCase) FindById(id string) (*entity.Todo, error) {
 
 	return task, nil
 }
+
+func (uc *TodoUseCase) Update(task *entity.Todo) (*entity.Todo, error) {
+	task, err := uc.repo.Update(task)
+	if err != nil {
+		return nil, err
+	}
+
+	return task, nil
+}

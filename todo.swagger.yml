@@ -1,14 +1,14 @@
 openapi: 3.0.0
 info:
-    title: todo
-    description: todoAPI
-    version: 1.0.0
+  title: todo
+  description: todoAPI
+  version: 1.0.0
 
 paths:
   /tasks:
     get:
       operationId: todolist-findall
-      description: "todoタスクの一覧を取得します"
+      description: "todoタスクの一覧を取得"
       responses:
         200:
           description: "成功時のレスポンス"
@@ -85,58 +85,95 @@ paths:
                   - deadline
         "400":
           description: Bad Request
+    put:
+      operationId: todo-update
+      description: "タスクの内容を更新します"
+      parameters:
+        - name: "taskId"
+          in: path
+          description: "詳細を取得したいtodoタスクのID"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+          example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task:
+                  type: string
+                  description: タスクの内容
+                  example: "買い物に行く"
+                deadline:
+                  type: string
+                  format: date
+                  description: 締切日
+                  example: "2024-10-12"
+                done:
+                  type: boolean
+                  description: タスクの状態
+                  example: false
+
+      responses:
+        201:
+          description: success
+        400:
+          description: Bad Request
 
   /tasks/create:
     post:
-     operationId: todo-create
-     description: "todoタスクを作成します"
-     requestBody:
-       content:
-         application/json:
-           schema:
-             type: object
-             properties:
-               task:
-                 type: string
-                 description: タスクを設定
-                 example: "買い物に行く"
-               deadline:
-                type: string
-                description: 締切日を設定
-                example: "2024-10-12"
-             required:
-                 - task
-                 - deadline
-     responses:
-       201:
-         description: success
-         content:
-           application/json:
-             schema:
-               type: object
-               properties:
-                 id:
-                   type: integer
-                   description: タスクのID
-                   example: 1
-                 task:
-                   type: string
-                   description: タスクの内容
-                   example: "買い物に行く"
-                 deadline:
-                   type: string
-                   format: date
-                   description: 締切日
-                   example: "2024-10-12"
-                 done:
-                   type: boolean
-                   description: タスクの状態
-                   example: false
+      operationId: todo-create
+      description: "todoタスクを作成します"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task:
+                  type: string
+                  description: タスクを設定
+                  example: "買い物に行く"
+                deadline:
+                  type: string
+                  description: 締切日を設定
+                  example: "2024-10-12"
+              required:
+                - task
+                - deadline
+      responses:
+        201:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: タスクのID
+                    example: 1
+                  task:
+                    type: string
+                    description: タスクの内容
+                    example: "買い物に行く"
+                  deadline:
+                    type: string
+                    format: date
+                    description: 締切日
+                    example: "2024-10-12"
+                  done:
+                    type: boolean
+                    description: タスクの状態
+                    example: false
 
-               required:
-                     - id
-                     - task
-                     - deadline
-                     - done
-       400:
-         description: Bad Request
+                required:
+                  - id
+                  - task
+                  - deadline
+                  - done
+        400:
+          description: Bad Request
