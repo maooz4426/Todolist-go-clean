@@ -178,3 +178,25 @@ paths:
         400:
           description: Bad Request
 
+    delete:
+      operationId: todo-delete
+      description: "todoタスクを削除します"
+      parameters:
+        - name: "taskId"
+          in: path
+          description: "削除したいtodoタスクのID"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+          example: 1
+
+      responses:
+        201:
+          description: success
+        400:
+          description: Bad Request
+
+
+
+
