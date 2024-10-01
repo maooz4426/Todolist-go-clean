@@ -85,7 +85,7 @@ paths:
                   - deadline
         "400":
           description: Bad Request
-    post:
+    put:
       operationId: todo-update
       description: "タスクの内容を更新します"
       parameters:
@@ -103,10 +103,6 @@ paths:
             schema:
               type: object
               properties:
-                id:
-                  type: integer
-                  description: タスクのID
-                  example: 1
                 task:
                   type: string
                   description: タスクの内容

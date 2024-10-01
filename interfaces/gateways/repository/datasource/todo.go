@@ -58,3 +58,9 @@ func (m *TodoRepository) FindById(id string) (*entity.Todo, error) {
 
 	return &todo, nil
 }
+
+func (m *TodoRepository) Update(task *entity.Todo) (*entity.Todo, error) {
+	m.db.Save(task)
+
+	return task, nil
+}

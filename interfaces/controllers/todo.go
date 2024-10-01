@@ -17,6 +17,7 @@ type Controller interface {
 	CreateController(c echo.Context) error
 	GetAllController(c echo.Context) error
 	GetDetailController(c echo.Context) error
+	UpdateController(c echo.Context) error
 }
 
 func NewController(svc port.TodoUseCaser) *TodoController {
@@ -84,6 +85,41 @@ func (con TodoController) GetDetailController(c echo.Context) error {
 
 	res, err := task.ConvertDTO()
 
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, res)
+}
+
+func (con TodoController) UpdateController(c echo.Context) error {
+
+	id := c.Param("taskId")
+
+	todo, err := con.usc.FindById(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	var req dto.TodoJson
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	todo.Task = req.Task
+	todo.Deadline, err = time.Parse("2006-01-02", req.Deadline)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	todo.Done = req.Done
+
+	todo, err = con.usc.Update(todo)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	res, err := todo.ConvertDTO()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
