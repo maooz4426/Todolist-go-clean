@@ -20,20 +20,6 @@ func (uc *TodoUseCase) Create(task *entity.Todo) (*entity.Todo, error) {
 		return nil, err
 	}
 
-	//res := &dto.CreateResponse{
-	//	ID:       task.ID,
-	//	Task:     task.Task,
-	//	Deadline: task.Deadline,
-	//	Done:     task.Done,
-	//}
-
-	//res, err := task.ConvertDTO()
-	//
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//return res, nil
 	return task, nil
 }
 
@@ -63,4 +49,14 @@ func (uc *TodoUseCase) Update(task *entity.Todo) (*entity.Todo, error) {
 	}
 
 	return task, nil
+}
+
+func (uc *TodoUseCase) Delete(id string) error {
+	err := uc.repo.Delete(id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

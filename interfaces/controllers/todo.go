@@ -18,6 +18,7 @@ type Controller interface {
 	GetAllController(c echo.Context) error
 	GetDetailController(c echo.Context) error
 	UpdateController(c echo.Context) error
+	DeleteController(c echo.Context) error
 }
 
 func NewController(svc port.TodoUseCaser) *TodoController {
@@ -125,4 +126,13 @@ func (con TodoController) UpdateController(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, res)
+}
+
+func (con TodoController) DeleteController(c echo.Context) error {
+	id := c.Param("taskId")
+	err := con.usc.Delete(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, "success")
 }

@@ -64,3 +64,9 @@ func (m *TodoRepository) Update(task *entity.Todo) (*entity.Todo, error) {
 
 	return task, nil
 }
+
+func (m *TodoRepository) Delete(id string) error {
+	m.db.Delete(&entity.Todo{}, id)
+
+	return nil
+}

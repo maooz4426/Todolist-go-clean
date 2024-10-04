@@ -15,6 +15,7 @@ func NewRouter(cnt *controllers.TodoController) {
 	e.GET("/tasks", cnt.GetAllController)
 	e.GET("/tasks/:taskId", cnt.GetDetailController)
 	e.PUT("/tasks/:taskId", cnt.UpdateController)
+	e.DELETE("/tasks/:taskId", cnt.DeleteController)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
