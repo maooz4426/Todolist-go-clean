@@ -51,12 +51,18 @@ func (uc *TodoUseCase) Update(task *entity.Todo) (*entity.Todo, error) {
 	return task, nil
 }
 
-func (uc *TodoUseCase) Delete(id string) error {
-	err := uc.repo.Delete(id)
+func (uc *TodoUseCase) Delete(id string) (*entity.Todo, error) {
 
+	todo, err := uc.repo.FindById(id)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	err = uc.repo.Delete(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return todo, nil
 }

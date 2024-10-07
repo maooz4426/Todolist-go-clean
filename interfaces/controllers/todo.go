@@ -1,10 +1,12 @@
 package controllers
 
 import (
+	"errors"
 	"github.com/labstack/echo/v4"
 	"github.com/maooz4426/Todolist/domain/dto"
 	"github.com/maooz4426/Todolist/domain/entity"
 	"github.com/maooz4426/Todolist/usecases/port"
+	"gorm.io/gorm"
 	"net/http"
 	"time"
 )
@@ -54,7 +56,7 @@ func (con TodoController) CreateController(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusCreated, res)
 }
 
 func (con TodoController) GetAllController(c echo.Context) error {
@@ -81,6 +83,9 @@ func (con TodoController) GetDetailController(c echo.Context) error {
 
 	task, err := con.usc.FindById(id)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return c.JSON(http.StatusNotFound, err.Error())
+		}
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
@@ -130,9 +135,9 @@ func (con TodoController) UpdateController(c echo.Context) error {
 
 func (con TodoController) DeleteController(c echo.Context) error {
 	id := c.Param("taskId")
-	err := con.usc.Delete(id)
+	task, err := con.usc.Delete(id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, "success")
+	return c.JSON(http.StatusOK, task)
 }

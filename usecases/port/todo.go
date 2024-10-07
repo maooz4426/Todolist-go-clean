@@ -9,5 +9,5 @@ type TodoUseCaser interface {
 	FindAll() ([]*entity.Todo, error)
 	FindById(id string) (*entity.Todo, error)
 	Update(task *entity.Todo) (*entity.Todo, error)
-	Delete(id string) error
+	Delete(id string) (*entity.Todo, error)
 }
