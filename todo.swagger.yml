@@ -4,11 +4,17 @@ info:
   description: todoAPI
   version: 1.0.0
 
+tags:
+  - name: todo
+    description: todoタスクのAPI
+
 paths:
   /tasks/create:
     post:
-      operationId: todo-create
+      summary: todo-create
       description: "todoタスクを作成します"
+      tags:
+        - todo
       requestBody:
         content:
           application/json:
@@ -64,6 +70,8 @@ paths:
     get:
       operationId: todolist-findall
       description: "todoタスクの一覧を取得"
+      tags:
+        - todo
       responses:
         200:
           description: "成功時のレスポンス"
@@ -110,6 +118,8 @@ paths:
     get:
       operationId: todo-detail
       description: "todoタスクの詳細を表示します"
+      tags:
+        - todo
       parameters:
         - name: "taskId"
           in: path
@@ -143,6 +153,8 @@ paths:
     put:
       operationId: todo-update
       description: "タスクの内容を更新します"
+      tags:
+        - todo
       parameters:
         - name: "taskId"
           in: path
@@ -177,4 +189,28 @@ paths:
           description: success
         400:
           description: Bad Request
+
+    delete:
+      operationId: todo-delete
+      description: "todoタスクを削除します"
+      tags:
+        - todo
+      parameters:
+        - name: "taskId"
+          in: path
+          description: "削除したいtodoタスクのID"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+          example: 1
+
+      responses:
+        204:
+          description: success
+        400:
+          description: Bad Request
+
+
+
 
