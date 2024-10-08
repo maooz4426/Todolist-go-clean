@@ -22,5 +22,5 @@ func main() {
 	hnd := controllers.NewController(usc)
 
 	router.NewRouter(hnd)
-
+	
 }

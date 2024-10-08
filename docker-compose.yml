@@ -8,6 +8,11 @@ services:
       - db
     ports:
       - 8080:8080
+
+    # airに必要
+    volumes:
+      - .:/app
+
   db:
     image: mysql:8.0
     container_name: todo_db
