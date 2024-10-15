@@ -1,21 +1,26 @@
 package interactor
 
 import (
+	"context"
+	"errors"
+	"fmt"
 	"github.com/maooz4426/Todolist/domain/entity"
 	"github.com/maooz4426/Todolist/usecases/repository"
+	"log"
 )
 
 type TodoUseCase struct {
-	repo repository.TodoRepositoryer
+	repo repository.ITodoRepository
+	txm  repository.ITransactionManager
 }
 
-func NewTodoUseCase(repo repository.TodoRepositoryer) *TodoUseCase {
-	return &TodoUseCase{repo: repo}
+func NewTodoUseCase(repo repository.ITodoRepository, txm repository.ITransactionManager) *TodoUseCase {
+	return &TodoUseCase{repo: repo, txm: txm}
 }
 
-func (uc *TodoUseCase) Create(task *entity.Todo) (*entity.Todo, error) {
+func (uc *TodoUseCase) Create(ctx context.Context, task *entity.Todo) (*entity.Todo, error) {
 
-	task, err := uc.repo.Insert(task)
+	task, err := uc.repo.Insert(ctx, task)
 	if err != nil {
 		return nil, err
 	}
@@ -23,9 +28,9 @@ func (uc *TodoUseCase) Create(task *entity.Todo) (*entity.Todo, error) {
 	return task, nil
 }
 
-func (uc *TodoUseCase) FindAll() ([]*entity.Todo, error) {
+func (uc *TodoUseCase) FindAll(ctx context.Context) ([]*entity.Todo, error) {
 
-	todos, err := uc.repo.FindAll()
+	todos, err := uc.repo.FindAll(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -33,8 +38,8 @@ func (uc *TodoUseCase) FindAll() ([]*entity.Todo, error) {
 	return todos, nil
 }
 
-func (uc *TodoUseCase) FindById(id string) (*entity.Todo, error) {
-	task, err := uc.repo.FindById(id)
+func (uc *TodoUseCase) FindById(ctx context.Context, id string) (*entity.Todo, error) {
+	task, err := uc.repo.FindById(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -42,8 +47,8 @@ func (uc *TodoUseCase) FindById(id string) (*entity.Todo, error) {
 	return task, nil
 }
 
-func (uc *TodoUseCase) Update(task *entity.Todo) (*entity.Todo, error) {
-	task, err := uc.repo.Update(task)
+func (uc *TodoUseCase) Update(ctx context.Context, task *entity.Todo) (*entity.Todo, error) {
+	task, err := uc.repo.Update(ctx, task)
 	if err != nil {
 		return nil, err
 	}
@@ -51,18 +56,35 @@ func (uc *TodoUseCase) Update(task *entity.Todo) (*entity.Todo, error) {
 	return task, nil
 }
 
-func (uc *TodoUseCase) Delete(id string) (*entity.Todo, error) {
+func (uc *TodoUseCase) Delete(ctx context.Context, id string) (*entity.Todo, error) {
 
-	todo, err := uc.repo.FindById(id)
+	var todo *entity.Todo
+	var err error
+
+	err = uc.txm.RunInTx(ctx, func(ctx context.Context) error {
+		todo, err = uc.repo.FindById(ctx, id)
+		fmt.Println(todo)
+		if err != nil {
+			return err
+		}
+
+		if todo == nil {
+			return errors.New("todo not found") //ここなに?
+		}
+
+		err = uc.repo.Delete(ctx, id)
+
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+
 	if err != nil {
 		return nil, err
 	}
 
-	err = uc.repo.Delete(id)
-
-	if err != nil {
-		return nil, err
-	}
+	log.Println(todo)
 
 	return todo, nil
 }

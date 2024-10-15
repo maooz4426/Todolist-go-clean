@@ -1,6 +1,7 @@
-package datasource
+package repository
 
 import (
+	"context"
 	"github.com/maooz4426/Todolist/domain/entity"
 	"gorm.io/gorm"
 	"strconv"
@@ -15,7 +16,7 @@ func NewTodoRepository(db *gorm.DB) *TodoRepository {
 	return &TodoRepository{db}
 }
 
-func (m *TodoRepository) Insert(task *entity.Todo) (*entity.Todo, error) {
+func (m *TodoRepository) Insert(ctx context.Context, task *entity.Todo) (*entity.Todo, error) {
 	todo := entity.Todo{
 		Task:     task.Task,
 		Done:     false,
@@ -31,7 +32,7 @@ func (m *TodoRepository) Insert(task *entity.Todo) (*entity.Todo, error) {
 	return &todo, nil
 }
 
-func (m *TodoRepository) FindAll() ([]*entity.Todo, error) {
+func (m *TodoRepository) FindAll(ctx context.Context) ([]*entity.Todo, error) {
 	var todos []*entity.Todo
 
 	result := m.db.Find(&todos)
@@ -42,7 +43,7 @@ func (m *TodoRepository) FindAll() ([]*entity.Todo, error) {
 	return todos, nil
 }
 
-func (m *TodoRepository) FindById(id string) (*entity.Todo, error) {
+func (m *TodoRepository) FindById(ctx context.Context, id string) (*entity.Todo, error) {
 	var todo entity.Todo
 
 	searchId, err := strconv.Atoi(id)
@@ -59,13 +60,13 @@ func (m *TodoRepository) FindById(id string) (*entity.Todo, error) {
 	return &todo, nil
 }
 
-func (m *TodoRepository) Update(task *entity.Todo) (*entity.Todo, error) {
+func (m *TodoRepository) Update(ctx context.Context, task *entity.Todo) (*entity.Todo, error) {
 	m.db.Save(task)
 
 	return task, nil
 }
 
-func (m *TodoRepository) Delete(id string) error {
+func (m *TodoRepository) Delete(ctx context.Context, id string) error {
 	m.db.Delete(&entity.Todo{}, id)
 
 	return nil
