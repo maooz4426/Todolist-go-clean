@@ -109,10 +109,6 @@ func (con TodoController) UpdateController(c echo.Context) error {
 	id := c.Param("taskId")
 
 	ctx := c.Request().Context()
-	//todo, err := con.usc.FindById(ctx, id)
-	//if err != nil {
-	//	return c.JSON(http.StatusInternalServerError, err.Error())
-	//}
 
 	var req dto.TodoJson
 	if err := c.Bind(&req); err != nil {
@@ -120,7 +116,6 @@ func (con TodoController) UpdateController(c echo.Context) error {
 	}
 
 	var todo entity.Todo
-
 	todoID, err := strconv.ParseUint(id, 10, 64)
 	todo.ID = uint(todoID)
 	if err != nil {
@@ -128,12 +123,11 @@ func (con TodoController) UpdateController(c echo.Context) error {
 	}
 	todo.Task = req.Task
 	todo.Deadline, err = time.Parse("2006-01-02", req.Deadline)
-
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-
 	todo.Done = req.Done
+	
 	todoRes, err := con.usc.Update(ctx, &todo)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())

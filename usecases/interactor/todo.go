@@ -48,10 +48,19 @@ func (uc *TodoUseCase) FindById(ctx context.Context, id string) (*entity.Todo, e
 }
 
 func (uc *TodoUseCase) Update(ctx context.Context, task *entity.Todo) (*entity.Todo, error) {
-	task, err := uc.repo.Update(ctx, task)
-	if err != nil {
-		return nil, err
-	}
+
+	uc.txm.RunInTx(ctx, func(ctx context.Context) error {
+		exsist, err := uc.repo.FindById(ctx, string(task.ID))
+		if exsist == nil {
+			return errors.New("todo not found")
+		}
+
+		task, err = uc.repo.Update(ctx, task)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
 
 	return task, nil
 }
