@@ -13,7 +13,7 @@ import (
 )
 
 type TodoController struct {
-	usc port.TodoUseCaser
+	usc port.ITodoUseCase
 }
 
 type Controller interface {
@@ -24,7 +24,7 @@ type Controller interface {
 	DeleteController(c echo.Context) error
 }
 
-func NewController(svc port.TodoUseCaser) *TodoController {
+func NewController(svc port.ITodoUseCase) *TodoController {
 	return &TodoController{svc}
 }
 

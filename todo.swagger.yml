@@ -187,6 +187,10 @@ paths:
                   type: boolean
                   description: タスクの状態
                   example: false
+              required:
+                - task
+                - deadline
+                - done
 
       responses:
         201:

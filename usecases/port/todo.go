@@ -5,7 +5,7 @@ import (
 	"github.com/maooz4426/Todolist/domain/entity"
 )
 
-type TodoUseCaser interface {
+type ITodoUseCase interface {
 	Create(ctx context.Context, task *entity.Todo) (*entity.Todo, error)
 	FindAll(ctx context.Context) ([]*entity.Todo, error)
 	FindById(ctx context.Context, id string) (*entity.Todo, error)
