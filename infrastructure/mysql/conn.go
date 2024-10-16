@@ -1,4 +1,4 @@
-package databases
+package mysql
 
 import (
 	"github.com/maooz4426/Todolist/domain/entity"
