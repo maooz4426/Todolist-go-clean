@@ -5,22 +5,45 @@ import (
 	"errors"
 	"fmt"
 	"github.com/maooz4426/Todolist/domain/entity"
-	"github.com/maooz4426/Todolist/usecases/repository"
+	repository2 "github.com/maooz4426/Todolist/domain/repository"
 	"log"
+	"strconv"
 )
 
 type TodoUseCase struct {
-	repo repository.ITodoRepository
-	txm  repository.ITransactionManager
+	repo repository2.ITodoRepository
+	txm  repository2.ITransactionManager
 }
 
-func NewTodoUseCase(repo repository.ITodoRepository, txm repository.ITransactionManager) *TodoUseCase {
+func NewTodoUseCase(repo repository2.ITodoRepository, txm repository2.ITransactionManager) *TodoUseCase {
 	return &TodoUseCase{repo: repo, txm: txm}
 }
 
-func (uc *TodoUseCase) Create(ctx context.Context, task *entity.Todo) (*entity.Todo, error) {
+func (uc *TodoUseCase) Create(ctx context.Context, taskReq *entity.Todo) (*entity.Todo, error) {
+	var task *entity.Todo
+	var err error
 
-	task, err := uc.repo.Insert(ctx, task)
+	err = uc.txm.RunInTx(ctx, func(ctx context.Context) error {
+		task, err = uc.repo.Insert(ctx, taskReq)
+		if err != nil {
+			return err
+		}
+
+		id := strconv.Itoa(int(task.ID))
+
+		var confirm *entity.Todo
+
+		confirm, err = uc.repo.FindById(ctx, id)
+		if err != nil {
+			return err
+		}
+
+		if confirm == nil {
+			return errors.New("todo not found")
+		}
+		return nil
+	})
+
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +73,7 @@ func (uc *TodoUseCase) FindById(ctx context.Context, id string) (*entity.Todo, e
 func (uc *TodoUseCase) Update(ctx context.Context, task *entity.Todo) (*entity.Todo, error) {
 
 	uc.txm.RunInTx(ctx, func(ctx context.Context) error {
-		exsist, err := uc.repo.FindById(ctx, string(task.ID))
+		exsist, err := uc.repo.FindById(ctx, strconv.Itoa(int(task.ID)))
 		if exsist == nil {
 			return errors.New("todo not found")
 		}

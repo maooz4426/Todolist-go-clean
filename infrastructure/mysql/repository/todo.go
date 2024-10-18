@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/maooz4426/Todolist/domain/entity"
 	"gorm.io/gorm"
-	"strconv"
 )
 
 type TodoRepository struct {
@@ -46,12 +45,12 @@ func (m *TodoRepository) FindAll(ctx context.Context) ([]*entity.Todo, error) {
 func (m *TodoRepository) FindById(ctx context.Context, id string) (*entity.Todo, error) {
 	var todo entity.Todo
 
-	searchId, err := strconv.Atoi(id)
-	if err != nil {
-		return &entity.Todo{}, err
-	}
+	//searchId, err := strconv.Atoi(id)
+	//if err != nil {
+	//	return &entity.Todo{}, err
+	//}
 
-	result := m.db.First(&todo, "id = ?", searchId)
+	result := m.db.First(&todo, "id = ?", id)
 
 	if result.Error != nil {
 		return &entity.Todo{}, result.Error
