@@ -6,6 +6,7 @@ import (
 	mockrepository "github.com/maooz4426/Todolist/domain/mockreposiotry"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
+	"gorm.io/gorm"
 	"testing"
 	"time"
 )
@@ -81,4 +82,86 @@ func TestUpdate(t *testing.T) {
 	require.Equal(t, true, taskRes.Done)
 	require.Equal(t, deadline, taskRes.Deadline)
 
+}
+
+func TestFindAll(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	ctx := context.Background()
+
+	mrTodo := mockrepository.NewMockITodoRepository(ctrl)
+	mrTx := mockrepository.NewMockITransactionManager(ctrl)
+	usc := NewTodoUseCase(mrTodo, mrTx)
+
+	expectedTodos := []*entity.Todo{
+		{Task: "task1", Done: false},
+		{Task: "task2", Done: true},
+	}
+
+	mrTodo.EXPECT().FindAll(gomock.Any()).Return(expectedTodos, nil)
+
+	todos, err := usc.FindAll(ctx)
+
+	require.NoError(t, err)
+	require.NotNil(t, todos)
+	require.Len(t, todos, 2)
+	require.Equal(t, expectedTodos, todos)
+}
+
+func TestFindById(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	ctx := context.Background()
+
+	mrTodo := mockrepository.NewMockITodoRepository(ctrl)
+	mrTx := mockrepository.NewMockITransactionManager(ctrl)
+	usc := NewTodoUseCase(mrTodo, mrTx)
+
+	expectedTodo := &entity.Todo{
+		Task: "test task",
+		Done: false,
+	}
+
+	mrTodo.EXPECT().FindById(gomock.Any(), "1").Return(expectedTodo, nil)
+
+	todo, err := usc.FindById(ctx, "1")
+
+	require.NoError(t, err)
+	require.NotNil(t, todo)
+	require.Equal(t, expectedTodo, todo)
+}
+
+func TestDelete(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	ctx := context.Background()
+
+	mrTodo := mockrepository.NewMockITodoRepository(ctrl)
+	mrTx := mockrepository.NewMockITransactionManager(ctrl)
+	usc := NewTodoUseCase(mrTodo, mrTx)
+
+	mrTx.EXPECT().RunInTx(gomock.Any(), gomock.Any()).DoAndReturn(
+		func(_ context.Context, f func(context.Context) error) error {
+			return f(ctx)
+		},
+	)
+
+	deadline, err := time.Parse("2006-01-02", "2024-10-11")
+	require.NoError(t, err)
+	var task *entity.Todo = &entity.Todo{Model: gorm.Model{ID: uint(1)}, Task: "test", Done: true, Deadline: deadline}
+
+	mrTodo.EXPECT().FindById(gomock.Any(), "1").Return(task, nil)
+	mrTodo.EXPECT().Delete(gomock.Any(), "1").Return(nil)
+
+	deletedTask, err := usc.Delete(ctx, "1")
+
+	require.NoError(t, err)
+	require.NotNil(t, deletedTask)
+	require.Equal(t, uint(1), deletedTask.ID)
+	require.Equal(t, "test", deletedTask.Task)
+	require.Equal(t, true, deletedTask.Done)
+	require.Equal(t, deadline, deletedTask.Deadline)
 }

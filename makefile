@@ -19,3 +19,5 @@ mysql:
 gomock:
 	mockgen -source=domain/repository/todo.go -destination=domain/mockreposiotry/todo.go -package mockrepository & mockgen -source=domain/repository/transaction_manager.go -destination=domain/mockreposiotry/transaction_manager.go -package mockrepository
 
+test:
+	go test -v ./...

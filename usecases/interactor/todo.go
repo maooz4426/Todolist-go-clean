@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/maooz4426/Todolist/domain/entity"
 	repository2 "github.com/maooz4426/Todolist/domain/repository"
-	"log"
 	"strconv"
 )
 
@@ -116,7 +115,7 @@ func (uc *TodoUseCase) Delete(ctx context.Context, id string) (*entity.Todo, err
 		return nil, err
 	}
 
-	log.Println(todo)
+	//log.Println(todo)
 
 	return todo, nil
 }
