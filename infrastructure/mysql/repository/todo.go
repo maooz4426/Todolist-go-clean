@@ -22,7 +22,7 @@ func (m *TodoRepository) Insert(ctx context.Context, task *entity.Todo) (*entity
 		Deadline: task.Deadline,
 	}
 
-	result := m.db.Create(&todo)
+	result := m.db.Debug().Create(&todo)
 
 	if result.Error != nil {
 		return &entity.Todo{}, result.Error
@@ -45,12 +45,7 @@ func (m *TodoRepository) FindAll(ctx context.Context) ([]*entity.Todo, error) {
 func (m *TodoRepository) FindById(ctx context.Context, id string) (*entity.Todo, error) {
 	var todo entity.Todo
 
-	//searchId, err := strconv.Atoi(id)
-	//if err != nil {
-	//	return &entity.Todo{}, err
-	//}
-
-	result := m.db.First(&todo, "id = ?", id)
+	result := m.db.Where("id = ?", id).Find(&todo)
 
 	if result.Error != nil {
 		return &entity.Todo{}, result.Error
