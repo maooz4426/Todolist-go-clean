@@ -98,49 +98,75 @@ func TestFindById(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	db, err := mysql.ConnectDBTest()
+	sqlDB, mock, err := mysql.NewDbMock()
 	require.NoError(t, err)
 
-	tx := db.Begin()
-	defer tx.Rollback()
-
 	ctx := context.Background()
-	m := NewTodoRepository(tx)
+	mr := NewTodoRepository(sqlDB)
 
 	deadline, _ := time.Parse("2006-01-02", "2024-10-11")
 	task := &entity.Todo{Model: gorm.Model{ID: 1}, Task: "test", Done: false, Deadline: deadline}
-	_, err = m.Insert(ctx, task)
-	require.NoError(t, err)
+
+	mock.ExpectBegin()
+	mock.ExpectExec("UPDATE `todos` SET").
+		WithArgs(
+			sqlmock.AnyArg(),
+			sqlmock.AnyArg(),
+			nil,
+			"updated",
+			true,
+			deadline,
+			1,
+		).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectCommit()
+
+	rows := sqlmock.NewRows([]string{"id", "created_at", "updated_at", "deleted_at", "task", "done", "deadline"}).
+		AddRow(1, time.Now(), time.Now(), nil, "updated", true, deadline)
+
+	mock.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `todos` WHERE id = ? AND `todos`.`deleted_at` IS NULL")).
+		WithArgs("1").
+		WillReturnRows(rows)
 
 	task.Task = "updated"
 	task.Done = true
-	updatedTask, err := m.Update(ctx, task)
+	updatedTask, err := mr.Update(ctx, task)
 	require.NoError(t, err)
 
-	foundTask, err := m.FindById(ctx, "1")
+	foundTask, err := mr.FindById(ctx, "1")
 	require.NoError(t, err)
 	require.Equal(t, updatedTask.Task, foundTask.Task)
 	require.Equal(t, updatedTask.Done, foundTask.Done)
+
+	err = mock.ExpectationsWereMet()
+	require.NoError(t, err)
 }
 
 func TestDelete(t *testing.T) {
-	db, err := mysql.ConnectDBTest()
+	sqlDB, mock, err := mysql.NewDbMock()
 	require.NoError(t, err)
-
-	tx := db.Begin()
-	defer tx.Rollback()
 
 	ctx := context.Background()
-	m := NewTodoRepository(tx)
+	mr := NewTodoRepository(sqlDB)
 
-	deadline, _ := time.Parse("2006-01-02", "2024-10-11")
-	task := &entity.Todo{Model: gorm.Model{ID: 1}, Task: "test", Done: false, Deadline: deadline}
-	_, err = m.Insert(ctx, task)
+	//deadline, _ := time.Parse("2006-01-02", "2024-10-11")
+	//task := &entity.Todo{Model: gorm.Model{ID: 1}, Task: "test", Done: false, Deadline: deadline}
+
+	mock.ExpectBegin()
+	mock.ExpectExec("UPDATE `todos` SET").
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectCommit()
+
+	mock.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `todos` WHERE id = ? AND `todos`.`deleted_at` IS NULL")).
+		WithArgs("1").
+		WillReturnError(gorm.ErrRecordNotFound)
+
+	err = mr.Delete(ctx, "1")
 	require.NoError(t, err)
 
-	err = m.Delete(ctx, "1")
-	require.NoError(t, err)
-
-	_, err = m.FindById(ctx, "1")
+	_, err = mr.FindById(ctx, "1")
 	require.Error(t, err)
+
+	err = mock.ExpectationsWereMet()
+	require.NoError(t, err)
 }
