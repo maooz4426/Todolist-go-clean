@@ -6,6 +6,13 @@ import (
 	"time"
 )
 
+//type CustomModel struct {
+//	ID        string `gorm:"primarykey"`
+//	CreatedAt time.Time
+//	UpdatedAt time.Time
+//	DeletedAt gorm.DeletedAt `gorm:"index"`
+//}
+
 type Todo struct {
 	gorm.Model
 	Task     string

@@ -5,7 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/maooz4426/Todolist/domain/dto"
 	"github.com/maooz4426/Todolist/domain/entity"
-	"github.com/maooz4426/Todolist/usecases/port"
+	"github.com/maooz4426/Todolist/domain/port"
 	"gorm.io/gorm"
 	"net/http"
 	"strconv"
@@ -36,10 +36,8 @@ func (con TodoController) CreateController(c echo.Context) error {
 	}
 
 	var taskReq entity.Todo
-	//fmt.Println(&req)
-	taskReq.Task = req.Task
 	var err error
-
+	taskReq.Task = req.Task
 	taskReq.Deadline, err = time.Parse("2006-01-02", req.Deadline)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
@@ -127,7 +125,7 @@ func (con TodoController) UpdateController(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	todo.Done = req.Done
-	
+
 	todoRes, err := con.usc.Update(ctx, &todo)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())

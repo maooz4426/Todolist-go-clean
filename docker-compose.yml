@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/go/Dockerfile
+    container_name: todo_server
     tty: true
     depends_on:
       - db
@@ -28,5 +29,7 @@ services:
     volumes:
       - db-volume:/var/lib/mysql
 
+
 volumes:
   db-volume:
+  test-db-volume:
