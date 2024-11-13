@@ -48,7 +48,20 @@ CREATE TABLE `todos` (
 
 ## Relations
 
-![er](todos.svg)
+```mermaid
+erDiagram
+
+
+"todos" {
+  bigint_unsigned id PK
+  datetime_3_ created_at
+  datetime_3_ updated_at
+  datetime_3_ deleted_at
+  longtext task
+  tinyint_1_ done
+  datetime_3_ deadline
+}
+```
 
 ---
 

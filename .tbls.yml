@@ -5,3 +5,8 @@ dsn: mysql://root:root@127.0.0.1:3306/db
 # Path to generate document
 # Default is `dbdoc`
 docPath: docs/schema
+
+disableOutputSchema: true
+
+er:
+  format: mermaid
