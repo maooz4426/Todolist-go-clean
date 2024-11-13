@@ -5,16 +5,16 @@ import (
 	"errors"
 	"fmt"
 	"github.com/maooz4426/Todolist/domain/entity"
-	repository2 "github.com/maooz4426/Todolist/domain/repository"
+	repository "github.com/maooz4426/Todolist/domain/repository"
 	"strconv"
 )
 
 type TodoUseCase struct {
-	repo repository2.ITodoRepository
-	txm  repository2.ITransactionManager
+	repo repository.ITodoRepository
+	txm  repository.ITransactionManager
 }
 
-func NewTodoUseCase(repo repository2.ITodoRepository, txm repository2.ITransactionManager) *TodoUseCase {
+func NewTodoUseCase(repo repository.ITodoRepository, txm repository.ITransactionManager) *TodoUseCase {
 	return &TodoUseCase{repo: repo, txm: txm}
 }
 
@@ -71,8 +71,11 @@ func (uc *TodoUseCase) FindById(ctx context.Context, id string) (*entity.Todo, e
 
 func (uc *TodoUseCase) Update(ctx context.Context, task *entity.Todo) (*entity.Todo, error) {
 
-	uc.txm.RunInTx(ctx, func(ctx context.Context) error {
+	err := uc.txm.RunInTx(ctx, func(ctx context.Context) error {
 		exsist, err := uc.repo.FindById(ctx, strconv.Itoa(int(task.ID)))
+		if err != nil {
+			return err
+		}
 		if exsist == nil {
 			return errors.New("todo not found")
 		}
@@ -83,6 +86,10 @@ func (uc *TodoUseCase) Update(ctx context.Context, task *entity.Todo) (*entity.T
 		}
 		return nil
 	})
+
+	if err != nil {
+		return nil, err
+	}
 
 	return task, nil
 }
@@ -114,8 +121,6 @@ func (uc *TodoUseCase) Delete(ctx context.Context, id string) (*entity.Todo, err
 	if err != nil {
 		return nil, err
 	}
-
-	//log.Println(todo)
 
 	return todo, nil
 }

@@ -1,4 +1,4 @@
-package repository
+package persistence
 
 import (
 	"context"
@@ -54,6 +54,7 @@ func TestFindAll(t *testing.T) {
 	taskName2 := "test2"
 	done2 := false
 	deadline2, err := time.Parse("2006-01-02", "2024-10-12")
+	require.NoError(t, err)
 
 	rows := sqlmock.NewRows([]string{"id", "task", "done", "deadline", "created_at", "updated_at", "deleted_at"}).
 		AddRow(1, taskName1, done1, deadline1, time.Now(), time.Now(), nil).
@@ -148,9 +149,6 @@ func TestDelete(t *testing.T) {
 
 	ctx := context.Background()
 	mr := NewTodoRepository(sqlDB)
-
-	//deadline, _ := time.Parse("2006-01-02", "2024-10-11")
-	//task := &entity.Todo{Model: gorm.Model{ID: 1}, Task: "test", Done: false, Deadline: deadline}
 
 	mock.ExpectBegin()
 	mock.ExpectExec("UPDATE `todos` SET").

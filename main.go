@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/maooz4426/Todolist/infrastructure/mysql"
-	"github.com/maooz4426/Todolist/infrastructure/mysql/repository"
+	"github.com/maooz4426/Todolist/infrastructure/mysql/persistence"
 	"github.com/maooz4426/Todolist/infrastructure/router"
 	"github.com/maooz4426/Todolist/interfaces/controllers"
 	"github.com/maooz4426/Todolist/usecases/interactor"
@@ -15,9 +15,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	repo := repository.NewTodoRepository(db)
+	repo := persistence.NewTodoRepository(db)
 
-	txm := repository.NewTransactionManager(db)
+	txm := persistence.NewTransactionManager(db)
 
 	usc := interactor.NewTodoUseCase(repo, txm)
 

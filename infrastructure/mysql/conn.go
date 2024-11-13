@@ -37,36 +37,11 @@ func ConnectDB() (*gorm.DB, error) {
 	return db, nil
 }
 
-func ConnectDBTest() (*gorm.DB, error) {
-	var db *gorm.DB
-	var err error
-
-	dsn := "test_user:test_password@tcp(todo_test_db:3306)/test_db?charset=utf8mb4&parseTime=True"
-
-	count := 5
-
-	for count > 1 {
-		if db, err = gorm.Open(mysql.Open(dsn)); err != nil {
-			time.Sleep(2 * time.Second)
-			count--
-			log.Printf("retry... count:%v\n", count)
-			continue
-		}
-		break
-	}
-
-	err = db.AutoMigrate(&entity.Todo{})
-
-	if err != nil {
-
-		return nil, err
-	}
-
-	return db, nil
-}
-
 func NewDbMock() (*gorm.DB, sqlmock.Sqlmock, error) {
 	sqlDB, mock, err := sqlmock.New()
+	if err != nil {
+		return nil, nil, err
+	}
 	mockDB, err := gorm.Open(mysql.New(mysql.Config{
 		Conn:                      sqlDB,
 		SkipInitializeWithVersion: true,
