@@ -1,0 +1,25 @@
+openapi: 3.0.0
+info:
+  title: todo
+  description: todoAPI
+  version: 1.0.0
+
+tags:
+  - name: todo
+    description: todoタスクのAPI
+
+paths:
+  /tasks/create:
+    $ref: "./paths/todo.yml#/todo_create"
+
+  /tasks:
+    $ref: "./paths/todo.yml#/todo_read_all"
+
+  /tasks/{taskId}:
+    $ref: "./paths/todo.yml#/todo_detail_crud"
+
+
+
+
+
+

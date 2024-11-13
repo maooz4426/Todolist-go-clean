@@ -1,0 +1,226 @@
+openapi: 3.0.0
+info:
+  title: todo
+  description: todoAPI
+  version: 1.0.0
+tags:
+  - name: todo
+    description: todoタスクのAPI
+paths:
+  /tasks/create:
+    post:
+      summary: todo-create
+      description: todoタスクを作成します
+      tags:
+        - todo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoCreate'
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /tasks:
+    get:
+      operationId: todolist-findall
+      description: todoタスクの一覧を取得
+      tags:
+        - todo
+      responses:
+        '200':
+          description: 成功時のレスポンス
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todos'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /tasks/{taskId}:
+    get:
+      operationId: todo-detail
+      description: todoタスクの詳細を表示します
+      tags:
+        - todo
+      parameters:
+        - $ref: '#/components/parameters/TodoID'
+      responses:
+        '200':
+          description: 成功時のレスポンス
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoDetail'
+        '400':
+          description: Bad Request
+    put:
+      operationId: todo-update
+      description: タスクの内容を更新します
+      tags:
+        - todo
+      parameters:
+        - $ref: '#/components/parameters/TodoID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoDetailUpdate'
+      responses:
+        '201':
+          description: success
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+    delete:
+      operationId: todo-delete
+      description: todoタスクを削除します
+      tags:
+        - todo
+      parameters:
+        - $ref: '#/components/parameters/TodoID'
+      responses:
+        '204':
+          description: success
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+components:
+  schemas:
+    TodoCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: タスクのID
+          example: 1
+        task:
+          type: string
+          description: タスクの内容
+          example: 買い物に行く
+        deadline:
+          type: string
+          format: date
+          description: 締切日
+          example: '2024-10-12'
+        done:
+          type: boolean
+          description: タスクの状態
+          example: false
+      required:
+        - task
+        - deadline
+    Todo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: タスクのID
+          example: 1
+        task:
+          type: string
+          description: タスクの内容
+          example: 買い物に行く
+        deadline:
+          type: string
+          format: date
+          description: 締切日
+          example: '2024-10-12'
+        done:
+          type: boolean
+          description: タスクの状態
+          example: false
+      required:
+        - id
+        - task
+        - deadline
+        - done
+    Todos:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: 全タスクの総数
+          example: 2
+        tasks:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: タスクのID
+                example: 1
+              task:
+                type: string
+                description: タスクの内容
+                example: 買い物に行く
+              deadline:
+                type: string
+                format: date
+                description: 締切日
+                example: '2024-10-12'
+              done:
+                type: boolean
+                description: タスクの状態
+                example: false
+          required:
+            - id
+            - task
+            - deadline
+            - done
+    TodoDetail:
+      type: object
+      properties:
+        task:
+          type: string
+          description: タスク
+          example: 買い物に行く
+        deadline:
+          type: string
+          description: 締切日
+          example: '2024-10-12'
+      required:
+        - task
+        - deadline
+    TodoDetailUpdate:
+      type: object
+      properties:
+        task:
+          type: string
+          description: タスクの内容
+          example: 買い物に行く
+        deadline:
+          type: string
+          format: date
+          description: 締切日
+          example: '2024-10-12'
+        done:
+          type: boolean
+          description: タスクの状態
+          example: false
+      required:
+        - task
+        - deadline
+        - done
+  parameters:
+    TodoID:
+      name: taskId
+      in: path
+      description: 詳細を取得したいtodoタスクのID
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 1

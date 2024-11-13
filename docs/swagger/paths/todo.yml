@@ -1,0 +1,93 @@
+todo_create:
+    post:
+      summary: todo-create
+      description: "todoタスクを作成します"
+      tags:
+        - todo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../components/todo.yml#/TodoCreate"
+      responses:
+        201:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: "../components/todo.yml#/Todo"
+        400:
+          description: Bad Request
+        500:
+          description: Internal Server Error
+
+todo_read_all:
+  get:
+    operationId: todolist-findall
+    description: "todoタスクの一覧を取得"
+    tags:
+      - todo
+    responses:
+      200:
+        description: "成功時のレスポンス"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/todo.yml#/Todos"
+      400:
+        description: Bad Request
+      500:
+        description: Internal Server Error
+
+todo_detail_crud:
+  get:
+    operationId: todo-detail
+    description: "todoタスクの詳細を表示します"
+    tags:
+      - todo
+    parameters:
+      - $ref: "../components/todo.yml#/TodoID"
+    responses:
+      200:
+        description: "成功時のレスポンス"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/todo.yml#/TodoDetail"
+      "400":
+        description: Bad Request
+
+  put:
+    operationId: todo-update
+    description: "タスクの内容を更新します"
+    tags:
+      - todo
+    parameters:
+      - $ref: "../components/todo.yml#/TodoID"
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: "../components/todo.yml#/TodoDetailUpdate"
+    responses:
+      201:
+        description: success
+      400:
+        description: Bad Request
+      500:
+        description: Internal Server Error
+
+  delete:
+    operationId: todo-delete
+    description: "todoタスクを削除します"
+    tags:
+      - todo
+    parameters:
+      - $ref: "../components/todo.yml#/TodoID"
+    responses:
+      204:
+        description: success
+      400:
+        description: Bad Request
+      500:
+        description: Internal Server Error
