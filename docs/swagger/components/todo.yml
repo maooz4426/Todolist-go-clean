@@ -1,0 +1,132 @@
+TodoID:
+  name: "taskId"
+  in: path
+  description: "詳細を取得したいtodoタスクのID"
+  required: true
+  schema:
+    type: "integer"
+    format: "int64"
+  example: 1
+
+Todo:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: タスクのID
+      example: 1
+    task:
+      type: string
+      description: タスクの内容
+      example: "買い物に行く"
+    deadline:
+      type: string
+      format: date
+      description: 締切日
+      example: "2024-10-12"
+    done:
+      type: boolean
+      description: タスクの状態
+      example: false
+
+  required:
+    - id
+    - task
+    - deadline
+    - done
+
+Todos:
+  type: object
+  properties:
+    total:
+      type: integer
+      description: 全タスクの総数
+      example: 2
+    tasks:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: タスクのID
+            example: 1
+          task:
+            type: string
+            description: タスクの内容
+            example: "買い物に行く"
+          deadline:
+            type: string
+            format: date
+            description: 締切日
+            example: "2024-10-12"
+          done:
+            type: boolean
+            description: タスクの状態
+            example: false
+      required:
+        - id
+        - task
+        - deadline
+        - done
+
+
+TodoCreate:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: タスクのID
+      example: 1
+    task:
+      type: string
+      description: タスクの内容
+      example: "買い物に行く"
+    deadline:
+      type: string
+      format: date
+      description: 締切日
+      example: "2024-10-12"
+    done:
+      type: boolean
+      description: タスクの状態
+      example: false
+  required:
+    - task
+    - deadline
+
+TodoDetail:
+    type: object
+    properties:
+      task:
+        type: string
+        description: タスク
+        example: "買い物に行く"
+      deadline:
+        type: string
+        description: 締切日
+        example: "2024-10-12"
+    required:
+      - task
+      - deadline
+
+TodoDetailUpdate:
+  type: object
+  properties:
+    task:
+      type: string
+      description: タスクの内容
+      example: "買い物に行く"
+    deadline:
+      type: string
+      format: date
+      description: 締切日
+      example: "2024-10-12"
+    done:
+      type: boolean
+      description: タスクの状態
+      example: false
+  required:
+    - task
+    - deadline
+    - done
