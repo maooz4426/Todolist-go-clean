@@ -18,6 +18,17 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_DATABASE: root
     steps:
+      - name: Set up Go
+        uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
+        with:
+            go-version-file: 'go.mod'
+            cache: false
+            check-latest: true
+        id: go
+      - name: Ensure go.mod is tidied
+        run: go mod tidy
+      - name: install sql-migrate
+        run: go install -v github.com/rubenv/sql-migrate/sql-migrate@latest
       - name: mysql wakeup
         run: |
           until (echo 'SELECT 1' | mysql -h 127.0.0.1 -P 3306 -uroot --silent &> /dev/null); do echo "waiting for mysql to be connectable" && sleep 2; done
