@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: mysql wakeup
         run: |
-          until (echo 'SELECT 1' | mysql -h 127.0.0.1 -P 3306 -uroot --silent &> /dev/null); do echo `waiting for mysql to be connectable' && sleep2; done
+          until (echo 'SELECT 1' | mysql -h 127.0.0.1 -P 3306 -uroot --silent &> /dev/null); do echo "waiting for mysql to be connectable" && sleep2; done
       - name: mysql migrate for tbls
         run: |
           mysql -h 127.0.0.1 -P 3306 -u root -e "CREATE DATABASE IF NOT EXISTS document DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin"
