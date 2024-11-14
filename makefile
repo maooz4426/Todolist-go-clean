@@ -24,3 +24,11 @@ gomock:
 
 test:
 	docker exec todo_server go test -v ./...
+
+#make gen/migration/file FILE_NAME={file_name}
+gen/migration/file:
+	$(eval DATE:=$(shell TZ=JST-9 date "+%Y%m%d%H%M%S"))
+	touch migrations/$(DATE)-$(FILE_NAME).sql
+
+sql/migrate:
+	sql-migrate up -env="development"

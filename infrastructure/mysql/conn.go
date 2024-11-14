@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/maooz4426/Todolist/domain/entity"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
@@ -27,12 +26,12 @@ func ConnectDB() (*gorm.DB, error) {
 		break
 	}
 
-	err = db.AutoMigrate(&entity.Todo{})
-
-	if err != nil {
-
-		return nil, err
-	}
+	//err = db.AutoMigrate(&entity.Todo{})
+	//
+	//if err != nil {
+	//
+	//	return nil, err
+	//}
 
 	return db, nil
 }
