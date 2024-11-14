@@ -42,4 +42,4 @@ jobs:
         uses: k1low/setup-tbls@2f169dd212c83dae2092297f549c23c5e074e77e # v1.2.0
       - name: run tbls
         run: |
-          TBLS_DSN=mysql://root:@localhost:3306/document tbls doc --rm-dist 
+          TBLS_DSN=mysql://root:@localhost:3306/db tbls doc --rm-dist 
