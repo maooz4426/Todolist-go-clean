@@ -37,7 +37,7 @@ jobs:
       - name: mysql migrate for tbls
         run: |
           mysql -h 127.0.0.1 -P 3306 -u root -e "CREATE DATABASE IF NOT EXISTS document DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin"
-          sql-migrate up -config=config/dbconfig.yml -env="ci"
+          sql-migrate up -env="ci"
       - name: install tbls
         uses: k1low/setup-tbls@2f169dd212c83dae2092297f549c23c5e074e77e # v1.2.0
       - name: run tbls
