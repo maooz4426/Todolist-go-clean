@@ -4,6 +4,7 @@
 
 | Name | Columns | Comment | Type |
 | ---- | ------- | ------- | ---- |
+| [migrations](migrations.md) | 2 |  | BASE TABLE |
 | [todos](todos.md) | 7 |  | BASE TABLE |
 
 ## Relations
@@ -12,6 +13,10 @@
 erDiagram
 
 
+"migrations" {
+  varchar_255_ id PK
+  datetime applied_at
+}
 "todos" {
   bigint_unsigned id PK
   datetime_3_ created_at

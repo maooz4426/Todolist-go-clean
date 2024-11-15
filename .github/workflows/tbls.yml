@@ -1,0 +1,52 @@
+name: tbls-gen
+
+on: push
+
+jobs:
+  gen:
+    name: tbls-gen
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      mysql:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: root
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4.2.2
+      - name: Set up Go
+        uses: actions/setup-go@v5.1.0
+        with:
+            go-version-file: 'go.mod'
+            cache: false
+            check-latest: true
+        id: go
+      - name: Ensure go.mod is tidied
+        run: go mod tidy
+      - name: install sql-migrate
+        run: go install -v github.com/rubenv/sql-migrate/sql-migrate@latest
+      - name: mysql wakeup
+        run: |
+          until (echo 'SELECT 1' | mysql -h 127.0.0.1 -P 3306 -uroot --silent &> /dev/null); do echo "waiting for mysql to be connectable" && sleep 2; done
+      - name: mysql migrate for tbls
+        run: |
+          mysql -h 127.0.0.1 -P 3306 -u root -e "CREATE DATABASE IF NOT EXISTS db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin"
+          sql-migrate up -env="ci"
+      - name: install tbls
+        uses: k1low/setup-tbls@v1
+      - name: run tbls
+        run: |
+          TBLS_DSN=mysql://root:@localhost:3306/db tbls doc --rm-dist --config .tbls.yml
+      - name: fix tbls
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
+          git add .
+          git commit -m "[ci skip] generate database document"
+          git push origin HEAD
