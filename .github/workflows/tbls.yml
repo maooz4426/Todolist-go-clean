@@ -5,8 +5,8 @@ on: push
 jobs:
   gen:
     name: tbls-gen
-    permissions:
-      contents: write
+#    permissions:
+#      contents: write
     runs-on: ubuntu-latest
     timeout-minutes: 10
     services:
