@@ -1,12 +1,19 @@
 name: tbls-gen
 
-on: push
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - closed # 元のPRを閉じた際に本Actionsが出したPRを自動的に閉じるために必要 (このtypeの場合は本Actionsのstepのみ実行する)
 
 jobs:
   gen:
     name: tbls-gen
     permissions:
       contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     timeout-minutes: 10
     services:
@@ -18,8 +25,16 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_DATABASE: root
     steps:
+      - name: my-app-install token
+        id: get-token
+        uses: getsentry/action-github-app-token@v3
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: checkout
         uses: actions/checkout@v4.2.2
+      - name: configure git for private repository
+        run: git config --global url."https://x-access-token:${{ steps.get-token.outputs.token }}@github.com".insteadOf "https://github.com"
       - name: Set up Go
         uses: actions/setup-go@v5.1.0
         with:
@@ -44,9 +59,7 @@ jobs:
         run: |
           TBLS_DSN=mysql://root:@localhost:3306/db tbls doc --rm-dist --config .tbls.yml
       - name: fix tbls
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email github-actions[bot]@users.noreply.github.com
-          git add .
-          git commit -m "[ci skip] generate database document"
-          git push origin HEAD
+        uses: dev-hato/actions-diff-pr-management@v1
+        with:
+            github-token: ${{ steps.get-token.outputs.token }}
+            branch-name-prefix: fix-tbls
