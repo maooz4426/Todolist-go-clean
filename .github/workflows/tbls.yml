@@ -26,7 +26,7 @@ jobs:
           MYSQL_DATABASE: root
     steps:
       - name: my-app-install token
-        id: my-app
+        id: get-token
         uses: getsentry/action-github-app-token@v3
         with:
           app_id: ${{ secrets.APP_ID }}
@@ -61,5 +61,5 @@ jobs:
       - name: fix tbls
         uses: dev-hato/actions-diff-pr-management@v1
         with:
-            github-token: ${{steps.my-app.outputs.token}}
+            github-token: ${{steps.get-token.outputs.token}}
             branch-name-prefix: fix-tbls
