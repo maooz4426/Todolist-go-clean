@@ -60,3 +60,4 @@ jobs:
         uses: dev-hato/actions-diff-pr-management@v1
         with:
             github-token: ${{steps.my-app.outputs.token}}
+            branch-name-prefix: fix-tbls
