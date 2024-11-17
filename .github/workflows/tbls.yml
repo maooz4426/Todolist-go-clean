@@ -25,16 +25,16 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_DATABASE: root
     steps:
-#      - name: my-app-install token
-#        id: get-token
-#        uses: getsentry/action-github-app-token@v3
-#        with:
-#          app_id: ${{ secrets.APP_ID }}
-#          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+      - name: my-app-install token
+        id: get-token
+        uses: getsentry/action-github-app-token@v3
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: checkout
         uses: actions/checkout@v4.2.2
-#      - name: configure git for private repository
-#        run: git config --global url."https://x-access-token:${{ steps.get-token.outputs.token }}@github.com".insteadOf "https://github.com"
+      - name: configure git for private repository
+        run: git config --global url."https://x-access-token:${{ steps.get-token.outputs.token }}@github.com".insteadOf "https://github.com"
       - name: Set up Go
         uses: actions/setup-go@v5.1.0
         with:
@@ -61,5 +61,5 @@ jobs:
       - name: fix tbls
         uses: dev-hato/actions-diff-pr-management@v1
         with:
-            github-token: ${{ secrets.GITHUB_TOKEN }}
+            github-token: ${{ steps.get-token.outputs.token }}
             branch-name-prefix: fix-tbls
