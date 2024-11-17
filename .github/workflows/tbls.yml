@@ -25,6 +25,12 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_DATABASE: root
     steps:
+      - name: my-app-install token
+        id: my-app
+        uses: getsentry/action-github-app-token@v3.1
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: checkout
         uses: actions/checkout@v4.2.2
       - name: Set up Go
@@ -53,4 +59,4 @@ jobs:
       - name: fix tbls
         uses: dev-hato/actions-diff-pr-management@v1
         with:
-            github-token: ${{secrets.GITHUB_TOKEN}}
+            github-token: ${{steps.my-app.outputs.token}}
