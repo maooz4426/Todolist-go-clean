@@ -31,7 +31,7 @@ jobs:
         id: get-token
         uses: getsentry/action-github-app-token@v3
         with:
-          app_id: ${{ secrets.APP_ID }}
+          app_id: ${{ vars.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: checkout
         uses: actions/checkout@v4.2.2
