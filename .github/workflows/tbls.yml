@@ -33,6 +33,8 @@ jobs:
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: checkout
         uses: actions/checkout@v4.2.2
+      - name: configure git for private repository
+        run: git config --global url."https://x-access-token:${{ steps.get-token.outputs.token }}@github.com".insteadOf "https://github.com"
       - name: Set up Go
         uses: actions/setup-go@v5.1.0
         with:
